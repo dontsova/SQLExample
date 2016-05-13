@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                dataUpdate();
             }
         });
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                dataDelete();
             }
         });
 
@@ -134,6 +134,41 @@ public class MainActivity extends AppCompatActivity {
         int clearCount = db.delete("mytable", null, null);
         Log.d(LOG_TAG, "deleted rows count = " + clearCount);
 
+        dbHelper.close();
+    }
+
+    void dataUpdate() {
+        String id = etID.getText().toString();
+        ContentValues cv = new ContentValues();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String name = etName.getText().toString();
+        String email = etEmail.getText().toString();
+
+        if(!id.equalsIgnoreCase("")){
+            Log.d(LOG_TAG, "--- Update mytabe: ---");
+            // подготовим значения для обновления
+            cv.put("name", name);
+            cv.put("email", email);
+            // обновляем по id
+            int updCount = db.update("mytable", cv, "id = ?",
+                    new String[] { id });
+            Log.d(LOG_TAG, "updated rows count = " + updCount);
+        }
+        dbHelper.close();
+
+    }
+
+    void dataDelete() {
+        String id = etID.getText().toString();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        if (!id.equalsIgnoreCase("")) {
+            Log.d(LOG_TAG, "--- Delete from mytabe: ---");
+            // удаляем по id
+            int delCount = db.delete("mytable", "id = " + id, null);
+            Log.d(LOG_TAG, "deleted rows count = " + delCount);
+        }
         dbHelper.close();
     }
 
